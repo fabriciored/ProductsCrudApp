@@ -8,7 +8,7 @@ interface ButtonProps {
 }
 
 function Button({ name, type, redirectTo, color, onClick, disabled }: ButtonProps) {
-  const buttonClasses = `hover:bg-blue-800 text-white font-bold py-2 px-4 rounded duration-300 ${
+  const buttonClasses = `hover:bg-blue-800 text-white font-medium py-1 px-1 md:px-2 rounded duration-300 ${
     color === "gray" ? "bg-neutral-600 hover:bg-neutral-600" : "bg-blue-600 hover:bg-blue-700"
   } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`;
 

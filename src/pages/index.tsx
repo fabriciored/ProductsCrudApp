@@ -74,7 +74,7 @@ export default function Home() {
             )}
           </div>
           <Button
-            name="Adicionar produto"
+            name="Adicionar"
             redirectTo="/novo-produto"
             color="blue"
           />
