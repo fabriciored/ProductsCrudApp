@@ -1,4 +1,4 @@
-import { Schema } from "@/server/entities";
+import { Schema } from "@/application/entities";
 
 export type ValidationMessage = {
   status: boolean;

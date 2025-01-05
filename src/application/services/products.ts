@@ -9,8 +9,12 @@ export default class ProductService {
         this.crud = new ProductsCrud();
     }
 
-    async findMany(): Promise<Product[]> {
-        return await this.crud.findMany();
+    async findMany(skip: number, take: number): Promise<{
+        data: Product[],
+        totalCount: number,
+        totalPages: number,
+    }> {
+        return await this.crud.findMany(skip, take);
     }
 
     async findById(id: string): Promise<Product | { message: string }> {
