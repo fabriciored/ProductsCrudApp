@@ -9,34 +9,34 @@ export default class ProductService {
         this.crud = new ProductsCrud();
     }
 
-    async findMany() {
+    async findMany(): Promise<Product[]> {
         return await this.crud.findMany();
     }
 
-    async findById(id: string) {
+    async findById(id: string): Promise<Product | { message: string }> {
         const product = await this.crud.findById(id);
         if (!product) {
-            return { error: `Product not found with id: ${id}` };
+            return { message: `Produto com id ${id} não encontrado` };
         }
         return product;
     }
 
-    async create(data: Product) {
+    async create(data: Product): Promise<Product> {
         return await this.crud.create(data);
     }
 
-    async update(id: string, data: Product) {
+    async update(id: string, data: Product): Promise<Product | { message: string }> {
         const product = await this.crud.findById(id);
         if (!product) {
-            return { error: `Product not found with id: ${id}` };
+            return { message: `Produto com id ${id} não encontrado` };
         }
-        return await this.crud.update(id, data);
+        return await this.crud.update(id, data) as Product;
     }
 
-    async delete(id: string) {
+    async delete(id: string): Promise<void | { message: string }> {
         const product = await this.crud.findById(id);
         if (!product) {
-            return { error: `Product not found with id: ${id}` };
+            return { message: `Produto com id ${id} não encontrado` };
         }
         return await this.crud.delete(id);
     }
