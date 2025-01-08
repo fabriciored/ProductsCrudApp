@@ -1,67 +1,67 @@
 import { ProductApi } from "@/api/product-api";
 import { Product } from "@/application/entities";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { toast } from "react-toastify";
 import Button from "./button";
+import { useEffect, useState } from "react";
+import ToastMessageHandler from "./toast-message-handler";
+import parseStringToBoolean from "@/helpers/parseStringToBoolean";
 
-export default function Form() {
+interface FormProps {
+  type: "create" | "edit";
+  product?: Product & { id: string };
+}
+
+export default function Form({ type, product }: FormProps) {
+  const [isLoading, setIsLoading] = useState(false);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<Product>();
 
   const productApi = new ProductApi();
 
   const onSubmit: SubmitHandler<Product> = async (data) => {
+    setIsLoading(true);
     const { name, description, price, isAvailable } = data as Product;
-    const parsedIsAvailable = parseStringToBoolean(isAvailable) as boolean;
 
-    const product = {
+    const productData = {
       name,
       description,
       price: parseInt(price as unknown as string),
-      isAvailable: parsedIsAvailable,
+      isAvailable: parseStringToBoolean(isAvailable) as boolean,
     };
 
-    const response = (await productApi.create(product)) as Product;
-    if ("error" in response && Array.isArray(response.error)) {
-      response.error.map((error: { [key: string]: string }) => {
-        Object.keys(error).map((key: string) => {
-          const errors = error[key] as unknown as Array<string>;
-          toast.error(
-            <p>
-              {key}: <br />{" "}
-              {errors.map((error: string, index: number) => {
-                return <p key={index}>{error}</p>;
-              })}
-            </p>
-          );
-        });
-      });
+    if (type === "create") {
+      const response = (await productApi.create(
+        productData
+      )) as unknown as Response;
+      ToastMessageHandler({ response, setIsLoading });
     }
-    if ("success" in response) {
-      toast.success(response.success as string)
-      setTimeout(() => {
-        window.location.href = "/";
-      }, 1000);
+    if (type === "edit") {
+      const id = product?.id as string;
+      const response = (await productApi.update(
+        id,
+        productData
+      )) as unknown as Response;
+      ToastMessageHandler({ response, setIsLoading });
     }
   };
 
-  function parseStringToBoolean(
-    value: string | null | boolean
-  ): boolean | null {
-    return typeof value === "boolean"
-      ? value
-      : value === "true"
-      ? true
-      : value === "false"
-      ? false
-      : null;
-  }
-
+  useEffect(() => {
+    if (type === "edit" && product) {
+      setValue("name", product.name);
+      setValue("description", product.description);
+      setValue("price", product.price);
+    }
+  }, [type, product, setValue]);
   return (
     <div className="max-w-md mx-auto md:max-w-xs md:mx-auto">
+      <h1 className="text-center font-medium">{
+        type === "create"? "Novo Produto" : "Editar Produto"
+        }</h1>
       <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col">
           <label htmlFor="name" className="text-sm font-medium mb-1">
@@ -135,7 +135,11 @@ export default function Form() {
             </span>
           )}
         </div>
-        <Button name="Enviar" type="submit" color="blue"></Button>
+        {isLoading ? (
+          <Button disabled name="Enviar" type="submit" color="gray"></Button>
+        ) : (
+          <Button name="Enviar" type="submit" color="blue"></Button>
+        )}
       </form>
     </div>
   );
