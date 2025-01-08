@@ -37,12 +37,13 @@ export default class ProductService {
         return await this.crud.update(id, data) as Product;
     }
 
-    async delete(id: string): Promise<void | { message: string }> {
+    async delete(id: string): Promise<{ message: string }> {
         const product = await this.crud.findById(id);
         if (!product) {
             return { message: `Produto com id ${id} não encontrado` };
         }
-        return await this.crud.delete(id);
+        await this.crud.delete(id);
+        return { message: `Produto com id ${id} foi deletado com sucesso`}
     }
 
 }
