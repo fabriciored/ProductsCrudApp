@@ -37,9 +37,14 @@ export class ApiService<T extends Record<string, unknown>> extends FetchApi {
       return response;
     }
   
-    public async delete(id: string): Promise<void> {
+    public async delete(id: string): Promise<{
+      success: string
+    } | {
+      value: { [key: string]: string[] }
+    }> {
       this.setMethod("DELETE")
-      await this.execute(`${this.url}?id=${id}`);
+      const response = await this.execute(`${this.url}?id=${id}`)
+      return response;
     }
   
   
