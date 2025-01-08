@@ -74,7 +74,7 @@ export default async function handler(
           return res.status(400).json({ error: "ID não informado." });
         }
         await productService.delete(query.id as string);
-        return res.status(204).json({ success: `Produto com id ${query.id} deletado com sucesso.` });
+        return res.status(200).json({ success: `Produto com id ${query.id} deletado com sucesso.` });
 
       default:
         return res.status(405).json({ error: "Método não permitido." });
