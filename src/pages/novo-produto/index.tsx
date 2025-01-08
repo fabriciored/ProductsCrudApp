@@ -1,12 +1,10 @@
 import Form from '@/components/form'
 import React from 'react'
 
-function NovoProduto() {
+export default function NovoProduto() {
   return (
     <div>
-        <Form/>
+        <Form type='create'/>
     </div>
   )
 }
-
-export default NovoProduto
