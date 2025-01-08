@@ -2,14 +2,14 @@ interface ButtonProps {
   name: string;
   type?: "button" | "submit" | "reset";
   redirectTo?: string;
-  color: "gray" | "blue";
+  color: "gray" | "blue" | "red";
   onClick?: () => void;
   disabled?: boolean;
 }
 
 function Button({ name, type, redirectTo, color, onClick, disabled }: ButtonProps) {
-  const buttonClasses = `hover:bg-blue-800 text-white font-medium py-1 px-1 md:px-2 rounded duration-300 ${
-    color === "gray" ? "bg-neutral-600 hover:bg-neutral-600" : "bg-blue-600 hover:bg-blue-700"
+  const buttonClasses = `hover:bg-blue-800 text-xs sm:text-sm md:text-lg text-white font-medium py-1 px-1 md:px-2 rounded duration-300 ${
+    color === "gray" ? "bg-neutral-600 hover:bg-neutral-600" : color === "blue" ? "bg-blue-600 hover:bg-blue-700" : "bg-red-600 hover:bg-red-800"
   } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`;
 
   if (redirectTo) {
